@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Birthday card </title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #FFDEE9, #B5FFFC);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+    }
+
+    .card {
+      background: linear-gradient(145deg, #ffffff, #ffe5ec, #e5fffa);
+      border: 5px double #ff69b4;
+      border-radius: 20px;
+      width: 340px;
+      padding: 30px 20px;
+      text-align: center;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+      transform: scale(0.9);
+      animation: popIn 0.8s ease-out forwards;
+    }
+
+    .card img {
+      width: 100px;
+      margin-bottom: 20px;
+      animation: float 3s infinite ease-in-out;
+    }
+
+    .card h1 {
+      margin: 0;
+      font-size: 2rem;
+      color: #FF4081;
+      background: linear-gradient(to right, #ff416c, #ff4b2b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      opacity: 0;
+      animation: fadeDown 1s ease 0.5s forwards;
+    }
+
+    .card p {
+      font-size: 1.1rem;
+      color: #3d3d3d;
+      line-height: 1.5;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.8s forwards;
+    }
+
+    @keyframes popIn {
+      to { transform: scale(1); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes fadeDown {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes fadeUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <img src="https://cdn-icons-png.flaticon.com/512/869/869869.png" alt="Birthday Cake"/>
+    <h1>Happy Birthday, Vivek!</h1>
+    <p>Wishing you a day full of sunshine, love, and cake! 🎉🎂🎈</p>
+  </div>
+</body>
+</html>
+
