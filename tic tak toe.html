@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tic Tac Toe 💡</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #E8F5F2;
+      color: #222;
+      font-family: "Segoe UI", sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 90vmin;
+      width: 100%;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 1rem;
+      font-size: 3vmin;
+      color: #116466;
+    }
+    .scoreboard {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      font-size: 2vmin;
+      margin-bottom: 1.5rem;
+    }
+    .scoreboard div span {
+      font-weight: bold;
+      font-size: 3vmin;
+      margin-left: 0.5rem;
+      color: #D9B08C;
+    }
+    #board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5%;
+    }
+    .cell {
+      aspect-ratio: 1;
+      background: #FAF9F9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid #116466;
+      font-size: 10vmin;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      user-select: none;
+    }
+    .cell:hover {
+      background: #D9B08C33;
+    }
+    .cell.clicked {
+      transform: scale(0.98);
+    }
+    .cell.win {
+      animation: winFlash 0.6s infinite alternate;
+      background: #FFD700;
+      color: #222;
+    }
+    @keyframes winFlash {
+      from { background: #FFD70077; }
+      to   { background: #FFD700EE; }
+    }
+    #message {
+      margin: 1.5rem 0;
+      font-size: 2.5vmin;
+      min-height: 1em;
+    }
+    #reset {
+      padding: 0.6rem 1.5rem;
+      font-size: 2vmin;
+      border: none;
+      background: #116466;
+      color: #FAF9F9;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    #reset:hover {
+      background: #0E3B3A;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Advanced Tic‑Tac‑Toe</h1>
+  <div class="scoreboard">
+    <div>X wins: <span id="scoreX">0</span></div>
+    <div>O wins: <span id="scoreO">0</span></div>
+    <div>Draws: <span id="scoreD">0</span></div>
+  </div>
+  <div id="board"></div>
+  <div id="message">Next player: X</div>
+  <button id="reset">Restart Game</button>
+</div>
+
+<script>
+  const boardElem    = document.getElementById('board');
+  const messageElem  = document.getElementById('message');
+  const resetBtn     = document.getElementById('reset');
+  const scoreXElem   = document.getElementById('scoreX');
+  const scoreOElem   = document.getElementById('scoreO');
+  const scoreDElem   = document.getElementById('scoreD');
+
+  let board = Array(9).fill(null);
+  let xIsNext = true;
+  let scores = { X: 0, O: 0, Draw: 0 };
+  let lastWinIndices = [];
+
+  const WIN_LINES = [
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
+
+  function checkWinner(b) {
+    for (const [a,b1,c] of WIN_LINES) {
+      if (b[a] && b[a] === b[b1] && b[a] === b[c]) {
+        return { player: b[a], combo: [a,b1,c] };
+      }
+    }
+    return b.every(cell => cell) ? { player: 'Draw', combo: [] } : null;
+  }
+
+  function handleClick(i) {
+    if (board[i] || checkWinner(board)) return;
+    board[i] = xIsNext ? 'X' : 'O';
+    xIsNext = !xIsNext;
+    render();
+  }
+
+  function render() {
+    boardElem.innerHTML = '';
+    lastWinIndices = [];
+    const result = checkWinner(board);
+
+    board.forEach((val, i) => {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      if (val) cell.classList.add('clicked');
+      cell.textContent = val || '';
+      cell.addEventListener('click', () => handleClick(i));
+      boardElem.appendChild(cell);
+    });
+
+    if (result) {
+      if (result.player === 'Draw') {
+        messageElem.textContent = "It's a draw!";
+      } else {
+        messageElem.textContent = `Winner: ${result.player}`;
+        lastWinIndices = result.combo;
+        highlightWin();
+      }
+      scores[result.player]++;
+      updateScores();
+    } else {
+      messageElem.textContent = `Next player: ${xIsNext ? 'X' : 'O'}`;
+    }
+  }
+
+  function highlightWin() {
+    lastWinIndices.forEach(idx => {
+      const cell = boardElem.children[idx];
+      if (cell) cell.classList.add('win');
+    });
+  }
+
+  function updateScores() {
+    scoreXElem.textContent = scores.X;
+    scoreOElem.textContent = scores.O;
+    scoreDElem.textContent = scores.Draw;
+  }
+
+  resetBtn.addEventListener('click', () => {
+    board = Array(9).fill(null);
+    xIsNext = true;
+    render();
+  });
+
+  // Initial draw of board
+  render();
+</script>
+</body>
+</html>
